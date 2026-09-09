@@ -72,3 +72,15 @@ crypto-simulator/
 2. Match the request/response shape exactly (especially field names and the `{ "error": "..." }` error format — the frontend depends on this).
 3. Run the frontend locally against your endpoint to confirm the corresponding page goes from an error state to showing real data.
 4. If you genuinely need a different shape, say so — don't silently diverge from the doc.
+
+## Contribution Guide
+
+1. Never push directly to `main`.
+2. Create a branch: `git checkout -b feature/auth-endpoints`
+3. Make your changes, commit: `git add . && git commit -m "Add login endpoint"`
+4. Push your branch: `git push origin feature/auth-endpoints`
+5. Open a Pull Request on GitHub into `main`.
+6. Wait for CI to pass (green check) — a red X means something broke; fix and push again.
+7. Get it reviewed/merged — don't merge your own PR without review if possible.
+
+Branch naming: `feature/<short-name>`, `fix/<short-name>`.
