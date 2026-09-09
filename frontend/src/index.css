@@ -1,0 +1,117 @@
+:root {
+  font-family: system-ui, -apple-system, sans-serif;
+  color-scheme: light dark;
+  --color-bg: #0f1115;
+  --color-surface: #1a1d24;
+  --color-border: #2a2e37;
+  --color-text: #e6e8eb;
+  --color-muted: #9aa1ac;
+  --color-positive: #2ecc71;
+  --color-negative: #e74c3c;
+  --color-accent: #4f8cff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+a { color: var(--color-accent); }
+
+button {
+  cursor: pointer;
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+input {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+/* Layout */
+.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.navbar-brand { font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+.badge-virtual {
+  font-size: 0.65rem;
+  background: var(--color-accent);
+  color: white;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+.navbar-links { display: flex; gap: 1.25rem; }
+.navbar-links a { text-decoration: none; color: var(--color-muted); }
+.navbar-links a.active { color: var(--color-text); font-weight: 600; }
+.navbar-user { display: flex; align-items: center; gap: 1rem; }
+
+.wallet-indicator {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+.wallet-indicator-error { color: var(--color-negative); }
+
+.app-content { padding: 1.5rem; max-width: 1100px; width: 100%; margin: 0 auto; }
+
+/* Auth pages */
+.auth-page { max-width: 360px; margin: 3rem auto; }
+.auth-page form { display: flex; flex-direction: column; gap: 0.75rem; }
+.auth-page label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; color: var(--color-muted); }
+
+/* States */
+.state-block { padding: 1rem; border-radius: 8px; background: var(--color-surface); margin: 0.5rem 0; }
+.state-error { border: 1px solid var(--color-negative); }
+.form-error { color: var(--color-negative); font-size: 0.85rem; }
+.form-success { color: var(--color-positive); font-size: 0.85rem; }
+
+/* Cards */
+.summary-cards { display: flex; gap: 1rem; flex-wrap: wrap; }
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 180px;
+}
+.card span { font-size: 0.8rem; color: var(--color-muted); }
+.card strong { font-size: 1.2rem; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td { text-align: left; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
+th { color: var(--color-muted); font-weight: 500; }
+
+.positive { color: var(--color-positive); }
+.negative { color: var(--color-negative); }
+
+/* Trade form */
+.trade-form { max-width: 320px; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.trade-side-toggle { display: flex; gap: 0.5rem; }
+.trade-side-toggle button { flex: 1; background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); }
+.trade-side-toggle button.active { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+.estimated-value { font-size: 0.85rem; color: var(--color-muted); }
+
+section { margin-bottom: 2rem; }

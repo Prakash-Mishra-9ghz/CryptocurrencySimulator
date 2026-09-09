@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+*.log
+.DS_Store
+27_CS_4E_13_project_synopsis.docx
+Cryptocurrency_Simulator_Project_Blueprint.docx
+Cryptocurrency_Simulator_Project_Context_Specification.docx
