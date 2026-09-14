@@ -22,10 +22,14 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Future route mounts will be added here as each phase is built, e.g.:
-// app.use("/api/auth", require("./routes/auth.routes"));
+app.use("/api/auth", require("./routes/auth.routes"));
+app.use("/api/wallet", require("./routes/wallet.routes"));
+
+// Not yet built — added in later phases:
 // app.use("/api/market", require("./routes/market.routes"));
 // app.use("/api/trades", require("./routes/trade.routes"));
+// app.use("/api/portfolio", require("./routes/portfolio.routes"));
+// app.use("/api/transactions", require("./routes/transaction.routes"));
 
 // 404 handler for any unmatched route
 app.use((req, res) => {
