@@ -24,10 +24,10 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/wallet", require("./routes/wallet.routes"));
+app.use("/api/market", require("./routes/market.routes"));
+app.use("/api/trades", require("./routes/trade.routes"));
 
 // Not yet built — added in later phases:
-// app.use("/api/market", require("./routes/market.routes"));
-// app.use("/api/trades", require("./routes/trade.routes"));
 // app.use("/api/portfolio", require("./routes/portfolio.routes"));
 // app.use("/api/transactions", require("./routes/transaction.routes"));
 
