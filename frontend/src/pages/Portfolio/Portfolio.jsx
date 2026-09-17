@@ -2,6 +2,8 @@ import { useApiData } from "../../hooks/useApiData";
 import { getPortfolio } from "../../services/portfolioService";
 import { LoadingState, ErrorState, EmptyState } from "../../components/common/States";
 import { formatInr, formatPercent } from "../../utils/format";
+import { getAssetAccent } from "../../utils/assetTheme";
+import AnimatedNumber from "../../components/common/AnimatedNumber";
 
 export default function Portfolio() {
   const { data, loading, error, refetch } = useApiData(getPortfolio, []);
@@ -16,18 +18,18 @@ export default function Portfolio() {
       {data && (
         <>
           <div className="summary-cards">
-            <div className="card">
+            <div className="card hero">
               <span>Total Value</span>
-              <strong>{formatInr(data.totalValue)}</strong>
+              <strong><AnimatedNumber value={data.totalValue} format={formatInr} /></strong>
             </div>
             <div className="card">
               <span>Available Cash</span>
-              <strong>{formatInr(data.availableCash)}</strong>
+              <strong><AnimatedNumber value={data.availableCash} format={formatInr} /></strong>
             </div>
             <div className="card">
               <span>Unrealized P&amp;L</span>
-              <strong>
-                {formatInr(data.totalPnl)} ({formatPercent(data.totalPnlPercent)})
+              <strong className={data.totalPnl >= 0 ? "positive" : "negative"}>
+                <AnimatedNumber value={data.totalPnl} format={formatInr} /> ({formatPercent(data.totalPnlPercent)})
               </strong>
             </div>
           </div>
@@ -51,16 +53,21 @@ export default function Portfolio() {
               </thead>
               <tbody>
                 {data.holdings.map((h) => (
-                  <tr key={h.assetId}>
-                    <td>{h.symbol}</td>
-                    <td>{h.quantity}</td>
-                    <td>{formatInr(h.avgCost)}</td>
-                    <td>{formatInr(h.currentPrice)}</td>
-                    <td>{formatInr(h.marketValue)}</td>
-                    <td className={h.unrealizedPnl >= 0 ? "positive" : "negative"}>
+                  <tr key={h.assetId} style={{ "--accent": getAssetAccent(h.symbol) }}>
+                    <td>
+                      <span className="asset-chip">
+                        <span className="dot" style={{ background: getAssetAccent(h.symbol) }} />
+                        {h.symbol}
+                      </span>
+                    </td>
+                    <td className="tabular-nums">{h.quantity}</td>
+                    <td className="tabular-nums">{formatInr(h.avgCost)}</td>
+                    <td className="tabular-nums">{formatInr(h.currentPrice)}</td>
+                    <td className="tabular-nums">{formatInr(h.marketValue)}</td>
+                    <td className={`tabular-nums ${h.unrealizedPnl >= 0 ? "positive" : "negative"}`}>
                       {formatInr(h.unrealizedPnl)}
                     </td>
-                    <td>{formatPercent(h.allocationPercent)}</td>
+                    <td className="tabular-nums">{formatPercent(h.allocationPercent)}</td>
                   </tr>
                 ))}
               </tbody>

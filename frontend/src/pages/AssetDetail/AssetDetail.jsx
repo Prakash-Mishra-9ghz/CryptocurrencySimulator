@@ -3,6 +3,8 @@ import { useApiData } from "../../hooks/useApiData";
 import { getAssetById } from "../../services/marketService";
 import { LoadingState, ErrorState } from "../../components/common/States";
 import { formatInr, formatPercent } from "../../utils/format";
+import { getAssetAccent } from "../../utils/assetTheme";
+import AnimatedNumber from "../../components/common/AnimatedNumber";
 import TradeForm from "../../components/trading/TradeForm";
 
 export default function AssetDetail() {
@@ -19,11 +21,12 @@ export default function AssetDetail() {
 
       {asset && (
         <>
-          <h1>
+          <span className="asset-chip">
+            <span className="dot" style={{ background: getAssetAccent(asset.symbol) }} />
             {asset.name} ({asset.symbol})
-          </h1>
+          </span>
           <p className="asset-price">
-            {formatInr(asset.priceInr)}{" "}
+            <AnimatedNumber value={asset.priceInr} format={formatInr} />
             <span className={asset.change24h >= 0 ? "positive" : "negative"}>
               {formatPercent(asset.change24h)} (24h)
             </span>

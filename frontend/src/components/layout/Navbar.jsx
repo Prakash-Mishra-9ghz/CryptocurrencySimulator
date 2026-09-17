@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Pill from "../common/Pill";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -13,7 +14,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        Crypto Simulator <span className="badge-virtual">SIMULATED ACCOUNT</span>
+        Crypto Simulator <Pill tone="primary">Simulated account</Pill>
       </div>
 
       <div className="navbar-links">

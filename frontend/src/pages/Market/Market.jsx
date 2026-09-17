@@ -3,6 +3,7 @@ import { useApiData } from "../../hooks/useApiData";
 import { getAssets } from "../../services/marketService";
 import { LoadingState, ErrorState, EmptyState } from "../../components/common/States";
 import { formatInr, formatPercent } from "../../utils/format";
+import { getAssetAccent } from "../../utils/assetTheme";
 
 export default function Market() {
   const { data: assets, loading, error, refetch } = useApiData(getAssets, []);
@@ -27,12 +28,15 @@ export default function Market() {
           </thead>
           <tbody>
             {assets.map((asset) => (
-              <tr key={asset.assetId}>
+              <tr key={asset.assetId} style={{ "--accent": getAssetAccent(asset.symbol) }}>
                 <td>
-                  {asset.name} ({asset.symbol})
+                  <span className="asset-chip">
+                    <span className="dot" style={{ background: getAssetAccent(asset.symbol) }} />
+                    {asset.name} ({asset.symbol})
+                  </span>
                 </td>
-                <td>{formatInr(asset.priceInr)}</td>
-                <td className={asset.change24h >= 0 ? "positive" : "negative"}>
+                <td className="tabular-nums">{formatInr(asset.priceInr)}</td>
+                <td className={`tabular-nums ${asset.change24h >= 0 ? "positive" : "negative"}`}>
                   {formatPercent(asset.change24h)}
                 </td>
                 <td>

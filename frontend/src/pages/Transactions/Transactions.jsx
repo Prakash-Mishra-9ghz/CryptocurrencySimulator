@@ -2,6 +2,8 @@ import { useApiData } from "../../hooks/useApiData";
 import { getTransactions } from "../../services/transactionService";
 import { LoadingState, ErrorState, EmptyState } from "../../components/common/States";
 import { formatInr } from "../../utils/format";
+import { getAssetAccent } from "../../utils/assetTheme";
+import Pill from "../../components/common/Pill";
 
 export default function Transactions() {
   const { data, loading, error, refetch } = useApiData(() => getTransactions(), []);
@@ -31,14 +33,21 @@ export default function Transactions() {
           </thead>
           <tbody>
             {data.map((tx) => (
-              <tr key={tx.id}>
+              <tr key={tx.id} style={{ "--accent": getAssetAccent(tx.symbol) }}>
                 <td>{new Date(tx.timestamp).toLocaleString("en-IN")}</td>
-                <td>{tx.type}</td>
-                <td>{tx.symbol}</td>
-                <td>{tx.quantity}</td>
-                <td>{formatInr(tx.executionPrice)}</td>
-                <td>{formatInr(tx.tradeValue)}</td>
-                <td>{tx.status}</td>
+                <td>
+                  <Pill tone={tx.type === "BUY" ? "positive" : "negative"}>{tx.type}</Pill>
+                </td>
+                <td>
+                  <span className="asset-chip">
+                    <span className="dot" style={{ background: getAssetAccent(tx.symbol) }} />
+                    {tx.symbol}
+                  </span>
+                </td>
+                <td className="tabular-nums">{tx.quantity}</td>
+                <td className="tabular-nums">{formatInr(tx.executionPrice)}</td>
+                <td className="tabular-nums">{formatInr(tx.tradeValue)}</td>
+                <td><Pill tone="neutral">{tx.status}</Pill></td>
               </tr>
             ))}
           </tbody>

@@ -56,14 +56,14 @@ export default function TradeForm({ asset, onTradeComplete }) {
       <div className="trade-side-toggle">
         <button
           type="button"
-          className={side === "BUY" ? "active" : ""}
+          className={side === "BUY" ? "active buy" : ""}
           onClick={() => setSide("BUY")}
         >
           Buy
         </button>
         <button
           type="button"
-          className={side === "SELL" ? "active" : ""}
+          className={side === "SELL" ? "active sell" : ""}
           onClick={() => setSide("SELL")}
         >
           Sell
