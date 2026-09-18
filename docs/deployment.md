@@ -18,9 +18,20 @@ mix it with your local testing data). Copy its connection string.
 
 ## 2. Deploy the backend
 
-Three options, ordered by "how sure are you this costs $0 forever":
+Four options — pick the one that fits, all genuinely free:
 
-### Option A: Bonto — genuinely free forever, no card, no trial credit
+### Option A: Back4App Containers — Docker-based, no card, no time-boxed trial
+
+[back4app.com](https://www.back4app.com) — free tier: 256MB RAM, 100GB transfer, 600 active hours/month, no credit card. Builds from the `backend/Dockerfile` already in this repo.
+
+1. Push this repo to GitHub.
+2. On Back4App: New App → Containers → connect your GitHub repo → set **Root Directory** to `backend` (so it finds `Dockerfile` there, not at the repo root).
+3. Back4App detects the `Dockerfile` and builds automatically.
+4. Add environment variables in the app settings: `NODE_ENV=production`, `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN=1d`, `COINGECKO_BASE_URL=https://api.coingecko.com/api/v3`, `MARKET_CACHE_TTL_SECONDS=30`, `STARTING_VIRTUAL_BALANCE_INR=1000000`, `CORS_ORIGIN` (leave blank for now).
+5. Deploy. Back4App assigns a public URL. Test: `curl https://<your-back4app-url>/api/health`
+6. **Note:** Back4App injects its own `PORT` at runtime — `src/server.js` already reads `process.env.PORT`, so no code change is needed.
+
+### Option B: Bonto — genuinely free forever, no card, no trial credit
 
 [bonto.dev](https://bonto.dev) is purpose-built for Express + MongoDB
 apps like this one. No card ever, and it's a recurring monthly free
@@ -42,7 +53,7 @@ fine for demos/evaluation.
 4. The app already listens on `process.env.PORT` (see `src/server.js`) — that's what Bonto requires, no code change needed.
 5. You get a live URL like `https://your-app.bonto.run`. Test: `curl https://your-app.bonto.run/api/health`
 
-### Option B: Railway — free to start, but a spending *limit*, not a spending *guarantee*
+### Option C: Railway — free to start, but a spending *limit*, not a spending *guarantee*
 
 $5 trial credit, then $1/month ongoing credit, no card required. Since
 no card is on file you can't actually be charged — but once credit
@@ -55,7 +66,7 @@ Bonto's genuinely recurring free tier.
 4. Add the same environment variables as Option A.
 5. Railway assigns a public URL (or generate one under Settings → Networking). Test: `curl https://<your-railway-url>/api/health`
 
-### Option C: Render — only if your account doesn't ask for a card
+### Option D: Render — only if your account doesn't ask for a card
 
 Card-verification prompts seem to be account/region dependent — some
 people never see it.
