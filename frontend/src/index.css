@@ -209,6 +209,17 @@ tr td:last-child { border-radius: 0 8px 8px 0; }
 
 .asset-price { font-family: var(--font-display); font-size: 1.75rem; display: flex; align-items: baseline; gap: 0.75rem; }
 
+.price-chart { margin-top: 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+.chart-range-toggle { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+.chart-range-toggle button {
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+}
+.chart-range-toggle button.active { background: var(--primary); color: white; border-color: var(--primary); }
+
 section { margin-bottom: 2.25rem; }
 
 @media (prefers-reduced-motion: reduce) {

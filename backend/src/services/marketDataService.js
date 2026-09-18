@@ -92,4 +92,61 @@ async function getFreshAssetPrice(assetId) {
   return match;
 }
 
-module.exports = { getCachedAssetPrices, getFreshAssetPrice };
+// Separate cache for price history, keyed by "assetId:days". Longer TTL
+// than live prices since historical data changes much less frequently.
+const HISTORY_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const historyCache = new Map(); // key -> { data, fetchedAt }
+
+/**
+ * Used by the Asset Detail page's price chart (Phase 9). Fetches
+ * CoinGecko's market_chart endpoint for the given number of days.
+ * Cached for 5 minutes per (assetId, days) pair to stay within rate
+ * limits — a chart doesn't need to-the-second freshness.
+ */
+async function getPriceHistory(assetId, days) {
+  const asset = findSupportedAsset(assetId);
+  if (!asset) {
+    throw new Error("Unsupported asset.");
+  }
+
+  const cacheKey = `${assetId}:${days}`;
+  const cached = historyCache.get(cacheKey);
+  if (cached && Date.now() - cached.fetchedAt < HISTORY_CACHE_TTL_MS) {
+    return cached.data;
+  }
+
+  const url = `${process.env.COINGECKO_BASE_URL}/coins/${assetId}/market_chart?vs_currency=inr&days=${days}`;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  let response;
+  try {
+    response = await fetch(url, { signal: controller.signal });
+  } catch (err) {
+    if (err.name === "AbortError") {
+      throw new Error("Price history request timed out.");
+    }
+    throw new Error("Unable to reach market data provider.");
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  if (response.status === 429) {
+    throw new Error("Market data provider rate limit exceeded. Please try again shortly.");
+  }
+  if (!response.ok) {
+    throw new Error(`Market data provider returned an error (status ${response.status}).`);
+  }
+
+  const raw = await response.json();
+  if (!Array.isArray(raw.prices)) {
+    throw new Error("Market data provider returned an unexpected response.");
+  }
+
+  const data = raw.prices.map(([timestamp, priceInr]) => ({ timestamp, priceInr }));
+  historyCache.set(cacheKey, { data, fetchedAt: Date.now() });
+  return data;
+}
+
+module.exports = { getCachedAssetPrices, getFreshAssetPrice, getPriceHistory };

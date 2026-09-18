@@ -6,6 +6,7 @@ import { formatInr, formatPercent } from "../../utils/format";
 import { getAssetAccent } from "../../utils/assetTheme";
 import AnimatedNumber from "../../components/common/AnimatedNumber";
 import TradeForm from "../../components/trading/TradeForm";
+import PriceChart from "../../components/market/PriceChart";
 
 export default function AssetDetail() {
   const { assetId } = useParams();
@@ -31,6 +32,8 @@ export default function AssetDetail() {
               {formatPercent(asset.change24h)} (24h)
             </span>
           </p>
+
+          <PriceChart assetId={asset.assetId} accentColor={getAssetAccent(asset.symbol)} />
 
           <TradeForm asset={asset} onTradeComplete={refetch} />
         </>

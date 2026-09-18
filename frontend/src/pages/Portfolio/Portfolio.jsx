@@ -4,6 +4,7 @@ import { LoadingState, ErrorState, EmptyState } from "../../components/common/St
 import { formatInr, formatPercent } from "../../utils/format";
 import { getAssetAccent } from "../../utils/assetTheme";
 import AnimatedNumber from "../../components/common/AnimatedNumber";
+import PortfolioAllocationChart from "../../components/portfolio/PortfolioAllocationChart";
 
 export default function Portfolio() {
   const { data, loading, error, refetch } = useApiData(getPortfolio, []);
@@ -36,6 +37,10 @@ export default function Portfolio() {
 
           {(!data.holdings || data.holdings.length === 0) && (
             <EmptyState message="No holdings yet. Buy an asset from the Market page to get started." />
+          )}
+
+          {data.holdings && data.holdings.length > 0 && (
+            <PortfolioAllocationChart holdings={data.holdings} availableCash={data.availableCash} />
           )}
 
           {data.holdings && data.holdings.length > 0 && (
