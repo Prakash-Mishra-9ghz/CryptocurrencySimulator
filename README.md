@@ -6,7 +6,7 @@ implementation.
 
 - `docs/architecture-decisions.md` — approved Phase 0 technical decisions
 - `docs/frontend-handoff.md` — **start here if you're building the backend.** Page-by-page breakdown of the frontend, exact endpoints it calls, and the exact request/response shapes it expects.
-- `docs/deployment.md` — how to deploy the backend (Render) and frontend (Vercel)
+- `docs/deployment.md` — how to deploy the backend (Bonto/Railway/Render, all free) and frontend (Vercel)
 - `backend/tests/README.md` — how to run unit and integration tests
 
 ## Current status
