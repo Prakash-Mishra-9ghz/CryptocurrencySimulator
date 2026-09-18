@@ -3,8 +3,16 @@ const cors = require("cors");
 
 const app = express();
 
-// Core middleware
-app.use(cors());
+// In production, restrict to the deployed frontend's origin(s) via
+// CORS_ORIGIN (comma-separated for multiple, e.g. web + future mobile
+// web wrapper). In development, allow all so localhost ports work
+// without configuration.
+const corsOptions =
+  process.env.NODE_ENV === "production" && process.env.CORS_ORIGIN
+    ? { origin: process.env.CORS_ORIGIN.split(",").map((o) => o.trim()) }
+    : {};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 /**

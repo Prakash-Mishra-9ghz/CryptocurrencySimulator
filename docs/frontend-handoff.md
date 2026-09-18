@@ -129,6 +129,7 @@ Each row links to `/market/:assetId` (Trade action).
 | Purpose | Endpoint | Request | Response |
 |---|---|---|---|
 | Load asset detail | `GET /market/assets/:id` | — | `{ "assetId": string, "symbol": string, "name": string, "priceInr": number, "change24h": number }` |
+| Price history (chart) | `GET /market/assets/:id/history?days=1\|7\|30` | — | `[{ "timestamp": number (ms epoch), "priceInr": number }]` — added in Phase 9 |
 | Execute BUY | `POST /trades/buy` | `{ "assetId": string, "quantity": number }` | `{ "transaction": { "executionPrice": number, ... }, ... }` (see note below) |
 | Execute SELL | `POST /trades/sell` | `{ "assetId": string, "quantity": number }` | Same shape as BUY |
 

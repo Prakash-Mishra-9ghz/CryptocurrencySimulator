@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: crypto-simulator-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false # set manually in Render dashboard — never commit real credentials
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 1d
+      - key: COINGECKO_BASE_URL
+        value: https://api.coingecko.com/api/v3
+      - key: MARKET_CACHE_TTL_SECONDS
+        value: 30
+      - key: STARTING_VIRTUAL_BALANCE_INR
+        value: 1000000
+      - key: CORS_ORIGIN
+        sync: false # set to your deployed frontend URL after deploying it

@@ -2,19 +2,18 @@ const Wallet = require("../models/Wallet");
 const Holding = require("../models/Holding");
 const { getCachedAssetPrices } = require("./marketDataService");
 const AppError = require("../utils/AppError");
-
-function round2(value) {
-  return Math.round(value * 100) / 100;
-}
+const {
+  round2,
+  computeMarketValue,
+  computeUnrealizedPnl,
+  computeReturnPercent,
+  computeTotalPortfolioValue,
+} = require("../utils/calculations");
 
 /**
  * Computes the full portfolio view for a user, per the formulas in
- * docs/architecture-decisions.md and spec Section 16:
- *   Holding Market Value   = quantity * currentPrice
- *   Total Portfolio Value  = availableCash + sum(holding market values)
- *   Unrealized P&L         = currentValue - (quantity * avgCost)
- *   Return %                = P&L / (quantity * avgCost) * 100
- *
+ * docs/architecture-decisions.md and spec Section 16 (see
+ * src/utils/calculations.js for the single source of truth).
  * Realized P&L, fees, slippage are NOT computed — out of MVP scope.
  */
 async function computePortfolio(userId) {
@@ -40,8 +39,8 @@ async function computePortfolio(userId) {
   const enrichedHoldings = holdings.map((h) => {
     const currentPrice = priceMap.get(h.assetId) ?? null;
     const costBasis = h.quantity * h.avgCost;
-    const marketValue = currentPrice !== null ? h.quantity * currentPrice : null;
-    const unrealizedPnl = marketValue !== null ? round2(marketValue - costBasis) : null;
+    const marketValue = currentPrice !== null ? computeMarketValue(h.quantity, currentPrice) : null;
+    const unrealizedPnl = marketValue !== null ? computeUnrealizedPnl(marketValue, costBasis) : null;
 
     if (marketValue !== null) {
       totalHoldingsValue += marketValue;
@@ -54,15 +53,15 @@ async function computePortfolio(userId) {
       quantity: h.quantity,
       avgCost: h.avgCost,
       currentPrice,
-      marketValue: marketValue !== null ? round2(marketValue) : null,
+      marketValue,
       unrealizedPnl,
       allocationPercent: null, // filled in below, needs totalValue first
     };
   });
 
-  const totalValue = round2(wallet.virtualCash + totalHoldingsValue);
+  const totalValue = computeTotalPortfolioValue(wallet.virtualCash, totalHoldingsValue);
   const totalPnl = round2(totalHoldingsValue - totalCostBasis);
-  const totalPnlPercent = totalCostBasis > 0 ? round2((totalPnl / totalCostBasis) * 100) : 0;
+  const totalPnlPercent = computeReturnPercent(totalPnl, totalCostBasis);
 
   const holdingsWithAllocation = enrichedHoldings.map((h) => ({
     ...h,

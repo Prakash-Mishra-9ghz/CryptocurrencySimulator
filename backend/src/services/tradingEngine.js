@@ -3,24 +3,10 @@ const Wallet = require("../models/Wallet");
 const Holding = require("../models/Holding");
 const Transaction = require("../models/Transaction");
 const AppError = require("../utils/AppError");
-const { isSupportedAsset, findSupportedAsset } = require("../config/supportedAssets");
+const { validateQuantity, validateAsset } = require("../utils/validators");
+const { round2, computeTradeValue, computeWeightedAvgCost } = require("../utils/calculations");
+const { findSupportedAsset } = require("../config/supportedAssets");
 const { getFreshAssetPrice } = require("./marketDataService");
-
-function round2(value) {
-  return Math.round(value * 100) / 100;
-}
-
-function validateQuantity(quantity) {
-  if (typeof quantity !== "number" || Number.isNaN(quantity) || quantity <= 0) {
-    throw new AppError("Quantity must be a number greater than zero.", 400);
-  }
-}
-
-function validateAsset(assetId) {
-  if (!assetId || !isSupportedAsset(assetId)) {
-    throw new AppError("Unsupported or unknown asset.", 400);
-  }
-}
 
 /**
  * Runs fn inside a MongoDB session/transaction so wallet, holding and
@@ -60,7 +46,7 @@ async function executeBuy(userId, assetId, quantity) {
   const asset = findSupportedAsset(assetId);
   const priceData = await getFreshAssetPrice(assetId); // always fresh, never cached (decision #6)
   const executionPrice = priceData.priceInr;
-  const tradeValue = round2(quantity * executionPrice);
+  const tradeValue = computeTradeValue(quantity, executionPrice);
 
   return runInTransaction(async (session) => {
     const wallet = await Wallet.findOne({ userId }).session(session);
@@ -76,12 +62,14 @@ async function executeBuy(userId, assetId, quantity) {
 
     let holding = await Holding.findOne({ userId, assetId }).session(session);
     if (holding) {
-      // Weighted Average Cost (architecture decision #5):
-      const newQuantity = holding.quantity + quantity;
-      const newAvgCost =
-        (holding.quantity * holding.avgCost + quantity * executionPrice) / newQuantity;
-      holding.quantity = newQuantity;
-      holding.avgCost = round2(newAvgCost);
+      const newAvgCost = computeWeightedAvgCost(
+        holding.quantity,
+        holding.avgCost,
+        quantity,
+        executionPrice
+      );
+      holding.quantity = round2(holding.quantity + quantity);
+      holding.avgCost = newAvgCost;
       await holding.save({ session });
     } else {
       holding = await Holding.create(
@@ -125,7 +113,7 @@ async function executeSell(userId, assetId, quantity) {
   const asset = findSupportedAsset(assetId);
   const priceData = await getFreshAssetPrice(assetId);
   const executionPrice = priceData.priceInr;
-  const tradeValue = round2(quantity * executionPrice);
+  const tradeValue = computeTradeValue(quantity, executionPrice);
 
   return runInTransaction(async (session) => {
     const holding = await Holding.findOne({ userId, assetId }).session(session);

@@ -6,19 +6,16 @@ implementation.
 
 - `docs/architecture-decisions.md` — approved Phase 0 technical decisions
 - `docs/frontend-handoff.md` — **start here if you're building the backend.** Page-by-page breakdown of the frontend, exact endpoints it calls, and the exact request/response shapes it expects.
+- `docs/deployment.md` — how to deploy the backend (Render) and frontend (Vercel)
+- `backend/tests/README.md` — how to run unit and integration tests
 
 ## Current status
 
-**Frontend: structurally complete.** All 8 pages built, routed, and calling
-real backend endpoints (no mock data anywhere). Since no backend exists
-yet, every page currently shows its loading → error state — that's
-expected. As each endpoint is implemented to match `docs/frontend-handoff.md`,
-its page starts working with no frontend changes needed.
+**Frontend: structurally complete + visually polished.** All 8 pages, charts, real endpoint calls, no mock data.
 
-**Backend: skeleton only** (`backend/`). Server boots, DB connection code
-exists, health check route works. No auth, no market data, no trading
-logic implemented yet — this is what the team builds next, using
-`docs/frontend-handoff.md` as the contract.
+**Backend: all core endpoints implemented and unit-tested.** Auth, wallet, market data (+ price history), trading engine (atomic transactions, Weighted Average Cost), portfolio/P&L, transaction history. 32 unit tests passing (`npm test` in `backend/`). Integration tests written, require a local test database to run (`backend/tests/README.md`).
+
+**Deployment: configured, not yet live.** `render.yaml` (backend) and `vercel.json` (frontend) ready — see `docs/deployment.md` for the actual deploy steps.
 
 ## Stack
 
@@ -72,15 +69,3 @@ crypto-simulator/
 2. Match the request/response shape exactly (especially field names and the `{ "error": "..." }` error format — the frontend depends on this).
 3. Run the frontend locally against your endpoint to confirm the corresponding page goes from an error state to showing real data.
 4. If you genuinely need a different shape, say so — don't silently diverge from the doc.
-
-## Contribution Guide
-
-1. Never push directly to `main`.
-2. Create a branch: `git checkout -b feature/auth-endpoints`
-3. Make your changes, commit: `git add . && git commit -m "Add login endpoint"`
-4. Push your branch: `git push origin feature/auth-endpoints`
-5. Open a Pull Request on GitHub into `main`.
-6. Wait for CI to pass (green check) — a red X means something broke; fix and push again.
-7. Get it reviewed/merged — don't merge your own PR without review if possible.
-
-Branch naming: `feature/<short-name>`, `fix/<short-name>`.
