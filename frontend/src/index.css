@@ -220,6 +220,38 @@ tr td:last-child { border-radius: 0 8px 8px 0; }
 }
 .chart-range-toggle button.active { background: var(--primary); color: white; border-color: var(--primary); }
 
+.ledger-status { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+
+.insights-widget {
+  margin-top: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+.insights-suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
+.suggestion-chip {
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+}
+.suggestion-chip:hover { color: var(--text); border-color: var(--primary); }
+.insights-form { display: flex; gap: 0.6rem; }
+.insights-form input { flex: 1; }
+.insights-answer {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  background: var(--surface-raised);
+  border-radius: 8px;
+  line-height: 1.6;
+  font-size: 0.92rem;
+}
+.insights-disclaimer { margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-muted); }
+
 section { margin-bottom: 2.25rem; }
 
 @media (prefers-reduced-motion: reduce) {

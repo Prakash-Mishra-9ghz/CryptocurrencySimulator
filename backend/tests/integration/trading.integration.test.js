@@ -134,6 +134,27 @@ describe("GET /api/portfolio", () => {
   });
 });
 
+describe("GET /api/ledger/verify", () => {
+  test("chain is valid after several trades", async () => {
+    await request(app)
+      .post("/api/trades/buy")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ assetId: "bitcoin", quantity: 0.001 });
+    await request(app)
+      .post("/api/trades/buy")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ assetId: "ethereum", quantity: 0.01 });
+
+    const res = await request(app)
+      .get("/api/ledger/verify")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.valid).toBe(true);
+    expect(res.body.totalTransactions).toBeGreaterThanOrEqual(2);
+  });
+});
+
 describe("Authorization across users", () => {
   test("a user cannot see another user's portfolio", async () => {
     await request(app).post("/api/auth/register").send({

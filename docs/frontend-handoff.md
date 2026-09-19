@@ -178,11 +178,14 @@ Frontend sorts/displays whatever order the array comes back in — **return newe
 | POST | `/auth/login` | No | Login page |
 | GET | `/market/assets` | Yes | Dashboard, Market |
 | GET | `/market/assets/:id` | Yes | Asset Detail |
+| GET | `/market/assets/:id/history` | Yes | Asset Detail (price chart) |
 | GET | `/wallet` | Yes | AppLayout (virtual cash indicator, shown on every authenticated page) |
 | GET | `/portfolio` | Yes | Dashboard, Portfolio |
 | GET | `/transactions` | Yes | Dashboard, Transactions |
 | POST | `/trades/buy` | Yes | Asset Detail (Trade form) |
 | POST | `/trades/sell` | Yes | Asset Detail (Trade form) |
+| GET | `/ledger/verify` | Yes | Transactions (integrity indicator) |
+| POST | `/insights/ask` | Yes | Portfolio (Ask your portfolio widget) |
 
 Every "Yes" (auth-required) endpoint must reject requests without a valid `Authorization: Bearer <token>` header with **HTTP 401** — the frontend's auto-logout depends on this exact status code.
 

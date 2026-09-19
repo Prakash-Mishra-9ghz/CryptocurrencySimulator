@@ -5,6 +5,7 @@ import { formatInr, formatPercent } from "../../utils/format";
 import { getAssetAccent } from "../../utils/assetTheme";
 import AnimatedNumber from "../../components/common/AnimatedNumber";
 import PortfolioAllocationChart from "../../components/portfolio/PortfolioAllocationChart";
+import PortfolioInsights from "../../components/portfolio/PortfolioInsights";
 
 export default function Portfolio() {
   const { data, loading, error, refetch } = useApiData(getPortfolio, []);
@@ -78,6 +79,8 @@ export default function Portfolio() {
               </tbody>
             </table>
           )}
+
+          <PortfolioInsights />
         </>
       )}
     </div>

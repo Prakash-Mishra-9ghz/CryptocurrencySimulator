@@ -1,5 +1,6 @@
 import { useApiData } from "../../hooks/useApiData";
 import { getTransactions } from "../../services/transactionService";
+import { verifyLedger } from "../../services/ledgerService";
 import { LoadingState, ErrorState, EmptyState } from "../../components/common/States";
 import { formatInr } from "../../utils/format";
 import { getAssetAccent } from "../../utils/assetTheme";
@@ -7,10 +8,25 @@ import Pill from "../../components/common/Pill";
 
 export default function Transactions() {
   const { data, loading, error, refetch } = useApiData(() => getTransactions(), []);
+  const ledger = useApiData(verifyLedger, []);
 
   return (
     <div className="transactions-page">
       <h1>Transaction History</h1>
+
+      {ledger.data && (
+        <p className="ledger-status">
+          <Pill tone={ledger.data.valid ? "positive" : "negative"}>
+            {ledger.data.valid ? "Ledger integrity verified" : "Ledger integrity check failed"}
+          </Pill>{" "}
+          <span className="ledger-status-detail">
+            {ledger.data.totalTransactions} chained transaction{ledger.data.totalTransactions === 1 ? "" : "s"}
+            {!ledger.data.valid && ledger.data.brokenAtSequence !== null && (
+              <> — mismatch at #{ledger.data.brokenAtSequence}</>
+            )}
+          </span>
+        </p>
+      )}
 
       {loading && <LoadingState />}
       {error && <ErrorState message={error} onRetry={refetch} />}

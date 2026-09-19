@@ -36,6 +36,8 @@ app.use("/api/market", require("./routes/market.routes"));
 app.use("/api/trades", require("./routes/trade.routes"));
 app.use("/api/portfolio", require("./routes/portfolio.routes"));
 app.use("/api/transactions", require("./routes/transaction.routes"));
+app.use("/api/ledger", require("./routes/ledger.routes"));
+app.use("/api/insights", require("./routes/insights.routes"));
 
 // 404 handler for any unmatched route
 app.use((req, res) => {

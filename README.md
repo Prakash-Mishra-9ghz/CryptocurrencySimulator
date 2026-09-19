@@ -5,17 +5,29 @@ Virtual money only. No real trades, no real crypto custody, no blockchain
 implementation.
 
 - `docs/architecture-decisions.md` — approved Phase 0 technical decisions
-- `docs/frontend-handoff.md` — **start here if you're building the backend.** Page-by-page breakdown of the frontend, exact endpoints it calls, and the exact request/response shapes it expects.
-- `docs/deployment.md` — how to deploy the backend (Bonto/Railway/Render, all free) and frontend (Vercel)
+- `docs/frontend-handoff.md` — page-by-page breakdown of the frontend and the exact endpoints/shapes it expects
+- `docs/api-documentation.md` — formal API reference
+- `docs/diagrams.md` — architecture, use-case, DFD, ER, and BUY/SELL sequence diagrams (Mermaid)
+- `docs/module-descriptions.md` — what each backend/frontend module does, with real file paths
+- `docs/testing-results.md` — real captured test output + manual test checklist
+- `docs/limitations-and-future-scope.md` — honest accounting of what's built vs. proposed
+- `docs/blockchain-module.md` — hash-chained transaction ledger design and honest scoping
+- `docs/ai-insights.md` — AI Portfolio Insights (Groq) design, setup, and limitations
+- `docs/deployment.md` — how to deploy the backend (free options) and frontend (Vercel)
 - `backend/tests/README.md` — how to run unit and integration tests
 
 ## Current status
 
-**Frontend: structurally complete + visually polished.** All 8 pages, charts, real endpoint calls, no mock data.
+**Deployed and live.** Backend on Back4App Containers, frontend on Vercel — tested end-to-end against production, matching local behavior.
 
-**Backend: all core endpoints implemented and unit-tested.** Auth, wallet, market data (+ price history), trading engine (atomic transactions, Weighted Average Cost), portfolio/P&L, transaction history. 32 unit tests passing (`npm test` in `backend/`). Integration tests written, require a local test database to run (`backend/tests/README.md`).
+## Live Demo
 
-**Deployment: configured, not yet live.** `render.yaml` (backend) and `vercel.json` (frontend) ready — see `docs/deployment.md` for the actual deploy steps.
+- Frontend: frontend-1efvq3lbu-crypto-aad0.vercel.app
+
+## Project history
+
+Frontend: all 8 pages, charts, real endpoint calls, no mock data.
+Backend: all core endpoints implemented and unit-tested (auth, wallet, market data + price history, trading engine with atomic transactions and Weighted Average Cost, portfolio/P&L, transaction history). 32 unit tests passing (`npm test` in `backend/`).
 
 ## Stack
 

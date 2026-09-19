@@ -7,6 +7,7 @@ const { validateQuantity, validateAsset } = require("../utils/validators");
 const { round2, computeTradeValue, computeWeightedAvgCost } = require("../utils/calculations");
 const { findSupportedAsset } = require("../config/supportedAssets");
 const { getFreshAssetPrice } = require("./marketDataService");
+const { appendToChain } = require("./ledgerService");
 
 /**
  * Runs fn inside a MongoDB session/transaction so wallet, holding and
@@ -86,17 +87,27 @@ async function executeBuy(userId, assetId, quantity) {
       ).then((docs) => docs[0]);
     }
 
+    const timestamp = new Date();
+    const coreFields = {
+      userId,
+      assetId,
+      symbol: asset.symbol,
+      type: "BUY",
+      quantity,
+      executionPrice,
+      totalValue: tradeValue,
+      timestamp,
+    };
+    const { previousHash, hash, sequenceNumber } = await appendToChain(session, coreFields);
+
     const [transaction] = await Transaction.create(
       [
         {
-          userId,
-          assetId,
-          symbol: asset.symbol,
-          type: "BUY",
-          quantity,
-          executionPrice,
-          totalValue: tradeValue,
+          ...coreFields,
           status: "COMPLETED",
+          sequenceNumber,
+          previousHash,
+          hash,
         },
       ],
       { session }
@@ -138,17 +149,27 @@ async function executeSell(userId, assetId, quantity) {
       await holding.save({ session });
     }
 
+    const timestamp = new Date();
+    const coreFields = {
+      userId,
+      assetId,
+      symbol: asset.symbol,
+      type: "SELL",
+      quantity,
+      executionPrice,
+      totalValue: tradeValue,
+      timestamp,
+    };
+    const { previousHash, hash, sequenceNumber } = await appendToChain(session, coreFields);
+
     const [transaction] = await Transaction.create(
       [
         {
-          userId,
-          assetId,
-          symbol: asset.symbol,
-          type: "SELL",
-          quantity,
-          executionPrice,
-          totalValue: tradeValue,
+          ...coreFields,
           status: "COMPLETED",
+          sequenceNumber,
+          previousHash,
+          hash,
         },
       ],
       { session }
